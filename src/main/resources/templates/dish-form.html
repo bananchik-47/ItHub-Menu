@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dish form</title>
+</head>
+<body>
+<h1>Dish form</h1>
+<form th:action="@{/admin/save}" th:object="${dish}" method="post">
+    <input type="hidden" th:field="*{id}">
+
+    <label>Name
+        <input type="text" th:field="*{name}" required>
+    </label>
+    <br>
+    <label>Price
+        <input type="number" th:field="*{price}" required>
+    </label>
+    <br>
+    <label>Description
+        <textarea th:field="*{description}" required></textarea>
+    </label>
+    <br>
+    <label>Image URL
+        <input type="text" th:field="*{imageUrl}" required>
+    </label>
+    <br>
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>

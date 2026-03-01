@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+<h1>Admin panel</h1>
+<a th:href="@{/admin/add}">Add dish</a>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dish : ${dishes}">
+        <td th:text="${dish.name}">Dish</td>
+        <td th:text="${dish.price}">0</td>
+        <td>
+            <a th:href="@{/admin/edit/{id}(id=${dish.id})}">Edit</a>
+            <a th:href="@{/admin/delete/{id}(id=${dish.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+<h1>Resource not found</h1>
+<p th:text="${errorMessage}">Unexpected error</p>
+<a th:href="@{/menu}">Back to menu</a>
+</body>
+</html>

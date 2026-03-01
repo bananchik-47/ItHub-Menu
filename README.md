@@ -17,4 +17,4 @@ $env:DB_PASSWORD="your_password"
 mvn spring-boot:run
 ```
 
-Если переменные не заданы, используются дефолтные значения из `application.properties`.
+Если переменные не заданы, используются дефолтные значения из `application.properties` (`postgres/postgres`).

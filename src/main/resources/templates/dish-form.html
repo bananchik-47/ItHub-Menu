@@ -1,31 +1,88 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dish form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${dish.id} ? 'Редактировать блюдо - Панель администратора' : 'Добавить новое блюдо - Панель администратора'">Форма блюда</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/script.js}"></script>
 </head>
 <body>
-<h1>Dish form</h1>
-<form th:action="@{/admin/save}" th:object="${dish}" method="post">
-    <input type="hidden" th:field="*{id}">
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">Панель администратора</div>
+            <div class="nav-links">
+                <a href="/menu" class="nav-link">Меню</a>
+                <a href="/admin" class="nav-link">Панель управления</a>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="admin-login-btn">Выход</button>
+                </form>
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </nav>
+    </div>
+</header>
 
-    <label>Name
-        <input type="text" th:field="*{name}" required>
-    </label>
-    <br>
-    <label>Price
-        <input type="number" th:field="*{price}" required>
-    </label>
-    <br>
-    <label>Description
-        <textarea th:field="*{description}" required></textarea>
-    </label>
-    <br>
-    <label>Image URL
-        <input type="text" th:field="*{imageUrl}" required>
-    </label>
-    <br>
-    <button type="submit">Save</button>
-</form>
+<main class="main-content">
+    <div class="container">
+        <h1 class="page-title" th:text="${dish.id} ? 'Редактировать блюдо' : 'Добавить новое блюдо'">Форма блюда</h1>
+        
+        <div class="admin-form-container fade-in-element">
+            <form th:action="@{/admin/save}" th:object="${dish}" method="post">
+                <input type="hidden" th:field="*{id}">
+                
+                <div class="form-group">
+                    <label for="name" class="form-label">Название:</label>
+                    <input type="text" id="name" class="form-input" th:field="*{name}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price" class="form-label">Цена:</label>
+                    <input type="number" id="price" class="form-input" th:field="*{price}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="form-label">Описание:</label>
+                    <textarea id="description" class="form-input" th:field="*{description}" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imageUrl" class="form-label">URL изображения:</label>
+                    <input type="text" id="imageUrl" class="form-input" th:field="*{imageUrl}" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" th:text="${dish.id} ? 'Обновить блюдо' : 'Создать блюдо'">Сохранить</button>
+                    <a th:href="@{/admin}" class="btn btn-outline">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Переключение темы
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+    }
+    
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            themeToggle.textContent = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+    });
+</script>
 </body>
 </html>

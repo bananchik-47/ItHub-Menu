@@ -1,12 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка - ItHub Столовая</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script th:src="@{/script.js}"></script>
 </head>
 <body>
-<h1>Resource not found</h1>
-<p th:text="${errorMessage}">Unexpected error</p>
-<a th:href="@{/menu}">Back to menu</a>
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">ItHub Столовая</div>
+            <div class="nav-links">
+                <a href="/menu" class="nav-link">Меню</a>
+                <a href="#" class="nav-link">Контакты</a>
+                <button class="admin-login-btn" onclick="location.href='/login'">Вход для администратора</button>
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <h1 class="page-title">Упс! Что-то пошло не так</h1>
+        <div class="error-container">
+            <div class="error-content">
+                <h2 th:text="${status} + ' - ' + ${error}">Ошибка</h2>
+                <p th:text="${errorMessage} ?: 'Произошла непредвиденная ошибка.'">Непредвиденная ошибка</p>
+                <p class="error-details" th:if="${message}">
+                    Детали: <span th:text="${message}"></span>
+                </p>
+                <a th:href="@{/menu}" class="btn btn-primary">Вернуться к меню</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Переключение темы
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+    }
+    
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            themeToggle.textContent = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+    });
+</script>
 </body>
 </html>

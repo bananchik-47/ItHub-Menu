@@ -1,18 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню столовой колледжа</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-<h1>College Canteen Menu</h1>
-<div th:if="${#lists.isEmpty(dishes)}">No dishes available.</div>
-<ul th:if="${not #lists.isEmpty(dishes)}">
-    <li th:each="dish : ${dishes}">
-        <h3 th:text="${dish.name}">Dish name</h3>
-        <p th:text="${dish.description}">Description</p>
-        <strong th:text="${dish.price}">0</strong>
-    </li>
-</ul>
+<script th:src="@{/script.js}"></script>
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">ItHub Столовая</div>
+            <div class="nav-links">
+                <a href="/menu" class="nav-link">Меню</a>
+                <a href="#" class="nav-link">Контакты</a>
+                <button class="admin-login-btn" onclick="location.href='/login'">Вход для администратора</button>
+                <button class="theme-toggle" id="themeToggle">🌙</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <h1 class="page-title">Наше меню</h1>
+        
+        <div th:if="${#lists.isEmpty(dishes)}" class="empty-message">
+            <p>На данный момент блюда отсутствуют.</p>
+        </div>
+        
+        <div class="dish-grid" th:if="${not #lists.isEmpty(dishes)}">
+            <div class="dish-card fade-in-element" th:each="dish : ${dishes}">
+                <img class="dish-image" th:src="${dish.imageUrl}" th:alt="${dish.name}" onerror="this.style.display='none'">
+                <div class="dish-info">
+                    <h3 class="dish-name" th:text="${dish.name}">Название блюда</h3>
+                    <p class="dish-description" th:text="${dish.description}">Описание</p>
+                    <span class="dish-price" th:text="${dish.price} + '₽'">0₽</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="payment-section">
+            <button class="pay-button btn btn-primary"><a href="https://online.sberbank.ru" class="Sber-link">Оплатить через Сбер</a></button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Переключение темы
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+    }
+    
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            themeToggle.textContent = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.textContent = '☀️';
+        }
+    });
+    
+    // Анимация карточек при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.dish-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
 </body>
 </html>

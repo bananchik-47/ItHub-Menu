@@ -372,6 +372,7 @@ body {
   box-shadow: 0 0 10px var(--neon-color);
 }
 
+<<<<<<< HEAD
 /* Улучшенные стили для формы */
 .dish-form {
   max-width: 600px;
@@ -701,6 +702,9 @@ body {
 }
 
 .Sber_link{
+=======
+.Sber-link{
+>>>>>>> 2265602de1415c00c2cf63519fffe6e14ab5106c
   color: #ffffff;
   text-decoration: none;
 }

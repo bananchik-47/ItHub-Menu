@@ -5,11 +5,18 @@ function initializeTheme() {
     const themeToggle = document.getElementById('themeToggle');
     if (!themeToggle) return;
     
+    // Проверяем, был ли уже добавлен обработчик
+    if (themeToggle.dataset.listenerAdded) {
+        return;
+    }
+    
     const currentTheme = localStorage.getItem('theme');
     
     if (currentTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         themeToggle.textContent = '☀️';
+    } else {
+        themeToggle.textContent = '🌙';
     }
     
     themeToggle.addEventListener('click', function() {
@@ -24,6 +31,9 @@ function initializeTheme() {
             themeToggle.textContent = '☀️';
         }
     });
+    
+    // Отмечаем, что обработчик уже добавлен
+    themeToggle.dataset.listenerAdded = 'true';
 }
 
 // Анимация карточек при загрузке
@@ -54,6 +64,63 @@ function animateOnScroll() {
         observer.observe(el);
     });
 }
+
+// Инициализация всех функций при загрузке DOM
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTheme();
+    animateCards();
+    animateOnScroll();
+    smoothScroll();
+    addLoadingEffects();
+    
+    // Анимация карточек при загрузке
+    const cards = document.querySelectorAll('.dish-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+    
+    // Анимация строк таблицы при загрузке
+    const rows = document.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.style.animationDelay = `${index * 0.05}s`;
+    });
+});
+
+// Добавляем обработчик события для всех форм
+document.addEventListener('submit', function(e) {
+    const form = e.target.closest('form');
+    if (form && form.classList.contains('ajax-form')) {
+        e.preventDefault();
+        
+        // Показываем индикатор загрузки
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Обработка...';
+        
+        // Отправляем форму
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Операция выполнена успешно!', 'success');
+                form.reset();
+            } else {
+                showNotification('Произошла ошибка: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            showNotification('Произошла ошибка: ' + error.message, 'error');
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        });
+    }
+});
 
 // Плавная прокрутка
 function smoothScroll() {
@@ -93,31 +160,16 @@ function showNotification(message, type = 'info') {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
-    // Стили для уведомления
-    Object.assign(notification.style, {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        padding: '15px 20px',
-        borderRadius: '8px',
-        backgroundColor: type === 'error' ? '#e74c3c' : type === 'success' ? '#2ecc71' : '#3498db',
-        color: 'white',
-        zIndex: '10000',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        transform: 'translateX(100%)',
-        transition: 'transform 0.3s ease'
-    });
-    
     document.body.appendChild(notification);
     
     // Анимация появления
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
+        notification.classList.add('show');
     }, 100);
     
     // Удаление через 3 секунды
     setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
+        notification.classList.remove('show');
         setTimeout(() => {
             document.body.removeChild(notification);
         }, 300);

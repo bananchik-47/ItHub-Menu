@@ -29,27 +29,31 @@
         <h1 class="page-title" th:text="${dish.id} ? 'Редактировать блюдо' : 'Добавить новое блюдо'">Форма блюда</h1>
         
         <div class="admin-form-container fade-in-element">
-            <form th:action="@{/admin/save}" th:object="${dish}" method="post">
+            <form th:action="@{/admin/save}" th:object="${dish}" method="post" id="dishForm" class="dish-form">
                 <input type="hidden" th:field="*{id}">
                 
                 <div class="form-group">
                     <label for="name" class="form-label">Название:</label>
-                    <input type="text" id="name" class="form-input" th:field="*{name}" required>
+                    <input type="text" id="name" class="form-input" th:field="*{name}" required minlength="2" maxlength="100">
+                    <div class="form-error" id="name-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="price" class="form-label">Цена:</label>
-                    <input type="number" id="price" class="form-input" th:field="*{price}" required>
+                    <input type="number" id="price" class="form-input" th:field="*{price}" required min="0" max="99999">
+                    <div class="form-error" id="price-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="description" class="form-label">Описание:</label>
-                    <textarea id="description" class="form-input" th:field="*{description}" required></textarea>
+                    <textarea id="description" class="form-input" th:field="*{description}" required minlength="5" maxlength="500" rows="4"></textarea>
+                    <div class="form-error" id="description-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="imageUrl" class="form-label">URL изображения:</label>
-                    <input type="text" id="imageUrl" class="form-input" th:field="*{imageUrl}" required>
+                    <input type="url" id="imageUrl" class="form-input" th:field="*{imageUrl}" required>
+                    <div class="form-error" id="imageUrl-error"></div>
                 </div>
                 
                 <div class="form-actions">
@@ -62,25 +66,47 @@
 </main>
 
 <script>
-    // Переключение темы
-    const themeToggle = document.getElementById('themeToggle');
-    const currentTheme = localStorage.getItem('theme');
-    
-    if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-    }
-    
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        if (currentTheme === 'dark') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            themeToggle.textContent = '🌙';
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            themeToggle.textContent = '☀️';
+    // Валидация формы
+    document.getElementById('dishForm').addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Очистка предыдущих сообщений об ошибках
+        document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+        
+        // Валидация названия
+        const name = document.getElementById('name').value.trim();
+        if (name.length < 2) {
+            document.getElementById('name-error').textContent = 'Название должно содержать не менее 2 символов';
+            isValid = false;
+        }
+        
+        // Валидация цены
+        const price = document.getElementById('price').value;
+        if (price <= 0) {
+            document.getElementById('price-error').textContent = 'Цена должна быть положительной';
+            isValid = false;
+        }
+        
+        // Валидация описания
+        const description = document.getElementById('description').value.trim();
+        if (description.length < 5) {
+            document.getElementById('description-error').textContent = 'Описание должно содержать не менее 5 символов';
+            isValid = false;
+        }
+        
+        // Валидация URL изображения
+        const imageUrl = document.getElementById('imageUrl').value.trim();
+        if (imageUrl) {
+            try {
+                new URL(imageUrl);
+            } catch (e) {
+                document.getElementById('imageUrl-error').textContent = 'Введите корректный URL изображения';
+                isValid = false;
+            }
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
         }
     });
 </script>

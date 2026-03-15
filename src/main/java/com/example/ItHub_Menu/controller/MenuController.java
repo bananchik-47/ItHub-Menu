@@ -18,19 +18,7 @@ public class MenuController {
         this.dishService = dishService;
     }
 
-    @PostConstruct
-    public void init() {
-        // Добавляем тестовое блюдо "борщ" если база данных пуста
-        List<DishDto> dishes = dishService.getAllDishes();
-        if (dishes.isEmpty()) {
-            DishDto soup = new DishDto();
-            soup.setName("Борщ");
-            soup.setPrice(150);
-            soup.setDescription("Традиционный украинский суп с свёклой, капустой, картофелем и мясом");
-            soup.setImageUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Borscht_with_sour_cream.jpg/800px-Borscht_with_sour_cream.jpg");
-            dishService.saveDish(soup);
-        }
-    }
+    // Удалили метод init, так как инициализация тестовых данных теперь происходит в сервисе
 
     @GetMapping("/")
     public String getHomePage(Model model) {

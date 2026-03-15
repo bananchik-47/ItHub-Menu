@@ -84,7 +84,84 @@ document.addEventListener('DOMContentLoaded', function() {
     rows.forEach((row, index) => {
         row.style.animationDelay = `${index * 0.05}s`;
     });
+    
+    // Добавляем обработчик для адаптивного поведения на мобильных устройствах
+    handleMobileBehavior();
+    
+    // Инициализация адаптивности для карточек блюд
+    initializeDishCardLayout();
 });
+
+// Функция для адаптивного расположения карточек блюд
+function initializeDishCardLayout() {
+    const dishGrid = document.querySelector('.dish-grid');
+    if (!dishGrid) return;
+    
+    // Проверяем ширину экрана и устанавливаем количество колонок
+    function updateDishGridLayout() {
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth <= 480) {
+            // На очень маленьких экранах одна колонка
+            dishGrid.style.gridTemplateColumns = '1fr';
+        } else if (screenWidth <= 768) {
+            // На планшетах и больших мобильных устройствах две колонки
+            dishGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        } else {
+            // На больших экранах три и более колонок
+            dishGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+        }
+    }
+    // Инициализируем сетку при загрузке
+    updateDishCardLayout();
+    
+    // Обновляем сетку при изменении размера окна
+    window.addEventListener('resize', updateDishCardLayout);
+}
+
+// Функция для обновления макета карточек блюд
+function updateDishCardLayout() {
+    const dishGrid = document.querySelector('.dish-grid');
+    if (!dishGrid) return;
+    
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth <= 480) {
+        // На очень маленьких экранах одна колонка
+        dishGrid.style.gridTemplateColumns = '1fr';
+    } else if (screenWidth <= 768) {
+        // На планшетах и больших мобильных устройствах две колонки
+        dishGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    } else {
+        // На больших экранах три и более колонок
+        dishGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+    }
+}
+
+// Функция для обработки мобильного поведения
+function handleMobileBehavior() {
+    // Проверяем ширину экрана
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // Уменьшаем размер шрифта для мобильных устройств
+        document.body.style.fontSize = '14px';
+        
+        // Добавляем класс для мобильного стиля
+        document.body.classList.add('mobile-device');
+    }
+    
+    // Обработчик изменения размера окна
+    window.addEventListener('resize', function() {
+        const isMobileNow = window.innerWidth <= 768;
+        
+        if (isMobileNow) {
+            document.body.classList.add('mobile-device');
+        } else {
+            document.body.classList.remove('mobile-device');
+        }
+    });
+}
 
 // Добавляем обработчик события для всех форм
 document.addEventListener('submit', function(e) {

@@ -109,6 +109,34 @@
             e.preventDefault();
         }
     });
+    
+    // Адаптивность для мобильных устройств
+    function handleMobileForm() {
+        const isMobile = window.innerWidth <= 768;
+        const formGroups = document.querySelectorAll('.form-group');
+        
+        if (isMobile) {
+            formGroups.forEach(group => {
+                group.style.marginBottom = '1.2rem';
+            });
+        }
+        
+        window.addEventListener('resize', function() {
+            const isMobileNow = window.innerWidth <= 768;
+            if (isMobileNow) {
+                formGroups.forEach(group => {
+                    group.style.marginBottom = '1.2rem';
+                });
+            } else {
+                formGroups.forEach(group => {
+                    group.style.marginBottom = '1.5rem';
+                });
+            }
+        });
+    }
+    
+    // Вызов функции при загрузке
+    document.addEventListener('DOMContentLoaded', handleMobileForm);
 </script>
 </body>
 </html>

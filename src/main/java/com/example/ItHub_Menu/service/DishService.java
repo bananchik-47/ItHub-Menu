@@ -5,6 +5,7 @@ import com.example.ItHub_Menu.model.DishDto;
 import com.example.ItHub_Menu.repository.DishRepository;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +18,23 @@ public class DishService {
         this.dishRepository = dishRepository;
     }
 
+    @PostConstruct
+    public void initializeTestData() {
+        if (dishRepository.count() == 0) {
+
+            DishDto borsch = new DishDto();
+            borsch.setName("Борщ");
+            borsch.setPrice(150);
+            borsch.setDescription("Традиционный украинский суп со свёклой");
+            borsch.setImageUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Borscht_with_sour_cream.jpg/800px-Borscht_with_sour_cream.jpg");
+
+            saveDish(borsch);
+        }
+    }
+
     public List<DishDto> getAllDishes() {
-        return dishRepository.findAll().stream()
+        return dishRepository.findAll()
+                .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
